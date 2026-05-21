@@ -1,4 +1,4 @@
-﻿import * as express from "express";
+import * as express from "express";
 import * as http from "http";
 import * as url from "url";
 import * as extend from 'extend';
@@ -13,7 +13,7 @@ import { webApp } from "../Server";
 
 export class RelayRoute {
     public static initRoutes(app: express.Application) {
-        app.all('/njsPC/*', async (req, res, next) => {
+        app.all('/njsPCv2/*', async (req, res, next) => {
             try {
                 await njsPCRelay.relayRequest(req, res, next);
             }
@@ -62,7 +62,7 @@ export class RelayRoute {
 
 }
 class ServiceRelay {
-    public prefix = '/njsPC';
+    public prefix = '/njsPCv2';
     public useProxy = false;
     public service: { protocol?: string, hostname?: string, port?: number, options?: any } = {};
     public socket: { protocol?: string, hostname?: string, port?: number, options?: any } = {};
@@ -124,7 +124,9 @@ class ServiceRelay {
     }
     public async relayRequest(req: express.Request, res, next: express.NextFunction) {
         try {
-            let proxyUrl = `${this.serviceUrl}${req.url.replace('/njsPC', '')}`;
+            let path = req.url.replace('/njsPCv2', '');
+            if (path.startsWith('/')) path = path.substring(1);
+            let proxyUrl = `${this.serviceUrl}${path}`;
             logger.info(`Relaying request: ${proxyUrl}`);
             let uri = url.parse(proxyUrl);
             let headers = {};

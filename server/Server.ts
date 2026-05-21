@@ -1,4 +1,4 @@
-﻿import * as os from 'os';
+import * as os from 'os';
 import * as path from "path";
 import * as express from "express";
 import * as fs from "fs";
@@ -196,6 +196,7 @@ export class HttpServer extends ProtoServer {
     }
     protected initSockets() {
         let options = {
+            path: '/socket.io-v2/',
             allowEIO3: true,
             cors: {
                 origin: true,

@@ -1,4 +1,4 @@
-﻿(function ($) {
+(function ($) {
     $.widget("pic.bodies", {
         options: { },
         _create: function () {
@@ -269,7 +269,7 @@
                     coolSetpoint: parseInt(body.attr('data-coolsetpoint'), 10),
                     hasCooling: makeBool(body.attr('data-hascooling'))
                 };
-                $.getApiService('/v2/config/body/' + el.attr('data-id') + '/heatModes', null, function (data, status, xhr) {
+                $.getApiService('/config/body/' + el.attr('data-id') + '/heatModes', null, function (data, status, xhr) {
                     console.log(data);
                     var units = el.parents('div.picBodies:first').attr('data-unitsname');
                     // https://github.com/tagyoureit/nodejs-poolController/issues/314

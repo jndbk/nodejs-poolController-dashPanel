@@ -304,7 +304,7 @@
                 o.socket = io(o.apiServiceUrl, { reconnectionDelay: 2000, reconnection: true, reconnectionDelayMax: 20000, upgrade: true });
             }
             else {
-                let path = window.location.pathname.replace(/[^/]*$/, '') + 'socket.io';
+                let path = window.location.pathname.replace(/[^/]*$/, '') + 'socket.io-v2/';
                 console.log({ msg: 'Connecting socket through proxy', url: window.location.origin.toString(), path: path });
                 o.socket = io(window.location.origin.toString(), { path: path, reconnectionDelay: 2000, reconnection: true, reconnectionDelayMax: 20000, upgrade: true });
             }

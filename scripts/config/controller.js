@@ -1,4 +1,4 @@
-﻿(function ($) {
+(function ($) {
     $.widget('pic.configInterfaces', {
         options: {},
         _create: function () {
@@ -36,7 +36,7 @@
                         var bf = dataBinder.fromElement(dlg);
                         var useProxy = makeBool($('body').attr('data-apiproxy'));
                         var url = '/app/interfaceBindings/file';
-                        var serviceUrl = useProxy ? '/njsPC' + (!url.startsWith('/') ? '/' : '') + url : $('body').attr('data-apiserviceurl') + (!url.startsWith('/') ? '/' : '') + url;
+                        var serviceUrl = useProxy ? '/njsPCv2' + (!url.startsWith('/') ? '/' : '') + url : $('body').attr('data-apiserviceurl') + (!url.startsWith('/') ? '/' : '') + url;
                         dlg.find('div.picFileUploader').each(function () {
                             this.upload({ url: serviceUrl, showProgress: true });
                         });

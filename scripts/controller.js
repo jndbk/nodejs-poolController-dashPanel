@@ -233,7 +233,7 @@
                     return;
                 }
                 var useProxy = makeBool($('body').attr('data-apiproxy'));
-                var baseUrl = useProxy ? '/njsPC' : $('body').attr('data-apiserviceurl');
+                var baseUrl = useProxy ? '/njsPCv2' : $('body').attr('data-apiserviceurl');
                 $.ajax({
                     url: baseUrl + '/config/security/login',
                     type: 'PUT',
@@ -372,7 +372,7 @@
                     o._icTimeoutTimer = null;
                     o.icSession = null;
                     self._applyIcSecurityUi();
-                    var baseUrl = (makeBool($('body').attr('data-apiproxy')) ? '/njsPC' : $('body').attr('data-apiserviceurl'));
+                    var baseUrl = (makeBool($('body').attr('data-apiproxy')) ? '/njsPCv2' : $('body').attr('data-apiserviceurl'));
                     $.ajax({ url: baseUrl + '/config/security/logout', type: 'PUT', dataType: 'json', contentType: 'application/json; charset=utf-8', data: '{}' });
                 }
             }, 30000);
@@ -505,7 +505,7 @@
                         o.icSession = null;
                         self._applyIcSecurityUi();
                         $.ajax({
-                            url: (makeBool($('body').attr('data-apiproxy')) ? '/njsPC' : $('body').attr('data-apiserviceurl')) + '/config/security/logout',
+                            url: (makeBool($('body').attr('data-apiproxy')) ? '/njsPCv2' : $('body').attr('data-apiserviceurl')) + '/config/security/logout',
                             type: 'PUT',
                             dataType: 'json',
                             contentType: 'application/json; charset=utf-8',
@@ -1842,7 +1842,7 @@
                         var bf = dataBinder.fromElement(dlg);
                         var useProxy = makeBool($('body').attr('data-apiproxy'));
                         var url = '/app/backup/file';
-                        var serviceUrl = useProxy ? '/njsPC' + (!url.startsWith('/') ? '/' : '') + url : $('body').attr('data-apiserviceurl') + (!url.startsWith('/') ? '/' : '') + url;
+                        var serviceUrl = useProxy ? '/njsPCv2' + (!url.startsWith('/') ? '/' : '') + url : $('body').attr('data-apiserviceurl') + (!url.startsWith('/') ? '/' : '') + url;
                         dlg.find('div.picFileUploader').each(function () {
                             this.upload({ url: serviceUrl, showProgress: true });
                         });

@@ -1,4 +1,4 @@
-﻿(function ($) {
+(function ($) {
     function isLightTypeName(name) {
         switch (name) {
             case 'light':
@@ -272,10 +272,56 @@
                             ind.attr('data-status', 'pending');
                         }
                     } else {
-                        $.putApiService('state/circuit/setState', { id: parseInt(el.attr('data-featureid'), 10), state: !makeBool(el.attr('data-state')) }, function (data, status, xhr) {
-                            self.setState(data);
-                        });
-                        setTimeout(function () { self.resetState(); }, 3000);
+                        let newState = !makeBool(el.attr('data-state'));
+                        if (newState && el.parents('.picFeatures').length > 0) {
+                            $.getLocalService('/config/poolKey', null, function (keyData) {
+                                let correctKey = keyData.key;
+                                let timeoutId;
+                                let resetTimeout = function() {
+                                    clearTimeout(timeoutId);
+                                    timeoutId = setTimeout(function() {
+                                        $.pic.modalDialog.closeDialog(cfm);
+                                        self.resetState();
+                                    }, 5000);
+                                };
+                                let cfm = $.pic.modalDialog.createConfirm('dlgConfirmFeatureOn', {
+                                    message: '<div>Enter passcode to turn on ' + o.name + ':</div><input type="tel" id="featurePasscode" style="width:100%;margin-top:10px;padding:5px;" autocomplete="off"/>',
+                                    width: '350px',
+                                    height: 'auto',
+                                    title: 'Confirm Turn On',
+                                    buttons: [{
+                                        text: 'Enter', icon: '<i class="fas fa-check"></i>',
+                                        click: function () {
+                                            if ($('#featurePasscode').val() === correctKey) {
+                                                clearTimeout(timeoutId);
+                                                $.pic.modalDialog.closeDialog(cfm);
+                                                $.putApiService('state/circuit/setState', { id: parseInt(el.attr('data-featureid'), 10), state: newState }, function (data, status, xhr) {
+                                                    self.setState(data);
+                                                });
+                                                setTimeout(function () { self.resetState(); }, 3000);
+                                            } else {
+                                                $('#featurePasscode').css('border', '1px solid red').val('');
+                                            }
+                                        }
+                                    },
+                                    {
+                                        text: 'Cancel', icon: '<i class="far fa-window-close"></i>',
+                                        click: function () { 
+                                            clearTimeout(timeoutId);
+                                            $.pic.modalDialog.closeDialog(cfm); 
+                                            self.resetState();
+                                        }
+                                    }]
+                                });
+                                cfm.find('#featurePasscode').on('keyup', resetTimeout).focus();
+                                resetTimeout();
+                            });
+                        } else {
+                            $.putApiService('state/circuit/setState', { id: parseInt(el.attr('data-featureid'), 10), state: newState }, function (data, status, xhr) {
+                                self.setState(data);
+                            });
+                            setTimeout(function () { self.resetState(); }, 3000);
+                        }
                     }
                 }
             }
@@ -415,10 +461,56 @@
                             ind.attr('data-status', 'pending');
                         }
                     } else {
-                        $.putApiService('state/circuit/setState', { id: parseInt(el.attr('data-groupid'), 10), state: !makeBool(el.attr('data-state')) }, function (data, status, xhr) {
-                            self.setState(data);
-                        });
-                        setTimeout(function () { self.resetState(); }, 3000);
+                        let newState = !makeBool(el.attr('data-state'));
+                        if (newState && el.parents('.picFeatures').length > 0) {
+                            $.getLocalService('/config/poolKey', null, function (keyData) {
+                                let correctKey = keyData.key;
+                                let timeoutId;
+                                let resetTimeout = function() {
+                                    clearTimeout(timeoutId);
+                                    timeoutId = setTimeout(function() {
+                                        $.pic.modalDialog.closeDialog(cfm);
+                                        self.resetState();
+                                    }, 5000);
+                                };
+                                let cfm = $.pic.modalDialog.createConfirm('dlgConfirmGroupOn', {
+                                    message: '<div>Enter passcode to turn on ' + o.name + ':</div><input type="tel" id="groupPasscode" style="width:100%;margin-top:10px;padding:5px;" autocomplete="off"/>',
+                                    width: '350px',
+                                    height: 'auto',
+                                    title: 'Confirm Turn On',
+                                    buttons: [{
+                                        text: 'Enter', icon: '<i class="fas fa-check"></i>',
+                                        click: function () {
+                                            if ($('#groupPasscode').val() === correctKey) {
+                                                clearTimeout(timeoutId);
+                                                $.pic.modalDialog.closeDialog(cfm);
+                                                $.putApiService('state/circuit/setState', { id: parseInt(el.attr('data-groupid'), 10), state: newState }, function (data, status, xhr) {
+                                                    self.setState(data);
+                                                });
+                                                setTimeout(function () { self.resetState(); }, 3000);
+                                            } else {
+                                                $('#groupPasscode').css('border', '1px solid red').val('');
+                                            }
+                                        }
+                                    },
+                                    {
+                                        text: 'Cancel', icon: '<i class="far fa-window-close"></i>',
+                                        click: function () { 
+                                            clearTimeout(timeoutId);
+                                            $.pic.modalDialog.closeDialog(cfm); 
+                                            self.resetState();
+                                        }
+                                    }]
+                                });
+                                cfm.find('#groupPasscode').on('keyup', resetTimeout).focus();
+                                resetTimeout();
+                            });
+                        } else {
+                            $.putApiService('state/circuit/setState', { id: parseInt(el.attr('data-groupid'), 10), state: newState }, function (data, status, xhr) {
+                                self.setState(data);
+                            });
+                            setTimeout(function () { self.resetState(); }, 3000);
+                        }
                     }
                 }
             }
@@ -691,12 +783,60 @@
                             ind.attr('data-status', 'pending');
                         }
                         else {
-                            $.putApiService('state/circuit/setState', { id: parseInt(el.attr('data-circuitid'), 10), state: !makeBool(el.attr('data-state')) }, function (circ, status, xhr) {
-                                self.setState(circ);
-                            }, function () {
-                                if (ind.attr('data-status') === 'pending') ind.attr('data-status', makeBool(ind.attr('data-state')) ? 'on' : 'off');
-                            });
-                            ind.attr('data-status', 'pending');
+                            let newState = !makeBool(el.attr('data-state'));
+                            if (newState && el.parents('.picFeatures').length > 0) {
+                                ind.attr('data-status', 'pending');
+                                $.getLocalService('/config/poolKey', null, function (keyData) {
+                                    let correctKey = keyData.key;
+                                    let timeoutId;
+                                    let resetTimeout = function() {
+                                        clearTimeout(timeoutId);
+                                        timeoutId = setTimeout(function() {
+                                            $.pic.modalDialog.closeDialog(cfm);
+                                            if (ind.attr('data-status') === 'pending') ind.attr('data-status', makeBool(ind.attr('data-state')) ? 'on' : 'off');
+                                        }, 5000);
+                                    };
+                                    let cfm = $.pic.modalDialog.createConfirm('dlgConfirmCircuitOn', {
+                                        message: '<div>Enter passcode to turn on ' + o.name + ':</div><input type="tel" id="circuitPasscode" style="width:100%;margin-top:10px;padding:5px;" autocomplete="off"/>',
+                                        width: '350px',
+                                        height: 'auto',
+                                        title: 'Confirm Turn On',
+                                        buttons: [{
+                                            text: 'Enter', icon: '<i class="fas fa-check"></i>',
+                                            click: function () {
+                                                if ($('#circuitPasscode').val() === correctKey) {
+                                                    clearTimeout(timeoutId);
+                                                    $.pic.modalDialog.closeDialog(cfm);
+                                                    $.putApiService('state/circuit/setState', { id: parseInt(el.attr('data-circuitid'), 10), state: newState }, function (circ, status, xhr) {
+                                                        self.setState(circ);
+                                                    }, function () {
+                                                        if (ind.attr('data-status') === 'pending') ind.attr('data-status', makeBool(ind.attr('data-state')) ? 'on' : 'off');
+                                                    });
+                                                } else {
+                                                    $('#circuitPasscode').css('border', '1px solid red').val('');
+                                                }
+                                            }
+                                        },
+                                        {
+                                            text: 'Cancel', icon: '<i class="far fa-window-close"></i>',
+                                            click: function () { 
+                                                clearTimeout(timeoutId);
+                                                $.pic.modalDialog.closeDialog(cfm); 
+                                                if (ind.attr('data-status') === 'pending') ind.attr('data-status', makeBool(ind.attr('data-state')) ? 'on' : 'off');
+                                            }
+                                        }]
+                                    });
+                                    cfm.find('#circuitPasscode').on('keyup', resetTimeout).focus();
+                                    resetTimeout();
+                                });
+                            } else {
+                                $.putApiService('state/circuit/setState', { id: parseInt(el.attr('data-circuitid'), 10), state: newState }, function (circ, status, xhr) {
+                                    self.setState(circ);
+                                }, function () {
+                                    if (ind.attr('data-status') === 'pending') ind.attr('data-status', makeBool(ind.attr('data-state')) ? 'on' : 'off');
+                                });
+                                ind.attr('data-status', 'pending');
+                            }
                         }
                     }
                 }

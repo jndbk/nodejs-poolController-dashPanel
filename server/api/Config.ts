@@ -1,4 +1,4 @@
-﻿import * as express from "express";
+import * as express from "express";
 import * as extend from 'extend';
 import * as dns from 'dns';
 import { ApiError } from '../Errors';
@@ -97,6 +97,9 @@ export class ConfigRoute {
                 return res.status(200).send(v);
             }
             catch (err) { console.log(err); return res.status(500).send(err); }
+        });
+        app.get('/config/poolKey', (req, res) => {
+            return res.status(200).send({ key: process.env.POOL_KEY || '' });
         });
         app.get('/config/:section', (req, res) => { return res.status(200).send(config.getSection(req.params.section)); });
         app.put('/config/:section', (req, res, next) => {

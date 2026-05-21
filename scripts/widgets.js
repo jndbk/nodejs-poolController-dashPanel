@@ -427,7 +427,7 @@ jQuery.each(['get', 'put', 'delete', 'post'], function (i, method) {
         };
         var cbShowSuccess = function (data, status, jqXHR) { };
         var useProxy = makeBool($('body').attr('data-apiproxy'));
-        var serviceUrl = useProxy ? '/njsPC' + (!url.startsWith('/') ? '/' : '') + url : $('body').attr('data-apiserviceurl') + (!url.startsWith('/') ? '/' : '') + url;
+        var serviceUrl = useProxy ? '/njsPCv2' + (!url.startsWith('/') ? '/' : '') + url : $('body').attr('data-apiserviceurl') + (!url.startsWith('/') ? '/' : '') + url;
         if (serviceUrl.startsWith('/')) {
             serviceUrl = serviceUrl.substring(1);
         }
@@ -493,7 +493,7 @@ jQuery.each(['get', 'put', 'delete', 'post'], function (i, method) {
         };
         var cbShowSuccess = function (data, status, jqXHR) { };
         var useProxy = makeBool($('body').attr('data-apiproxy'));
-        var serviceUrl = useProxy ? '/njsPC' + (!url.startsWith('/') ? '/' : '') + url : $('body').attr('data-apiserviceurl') + (!url.startsWith('/') ? '/' : '') + url;
+        var serviceUrl = useProxy ? '/njsPCv2' + (!url.startsWith('/') ? '/' : '') + url : $('body').attr('data-apiserviceurl') + (!url.startsWith('/') ? '/' : '') + url;
         if (serviceUrl.startsWith('/')) serviceUrl = serviceUrl.substring(1);
         console.log({ serviceUrl: serviceUrl, useProxy: useProxy });
 
