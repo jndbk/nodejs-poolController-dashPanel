@@ -7,6 +7,7 @@
         },
         _buildControls: function () {
             var self = this, o = self.options, el = self.element;
+            var isIntelliCenter = (($('body').attr('data-controllertype') || '').toLowerCase() === 'intellicenter');
             el.addClass('picConfigCategory');
             el.addClass('cfgGeneral');
             $.getApiService('/config/options/general', null, function (opts, status, xhr) {
@@ -15,9 +16,14 @@
                 $('<div></div>').appendTo(el).pnlTimeDate({ timeZones: opts.timeZones, clockModes: opts.clockModes, clockSources: opts.clockSources, systemUnits: opts.systemUnits, tempUnits: opts.tempUnits })[0].dataBind(opts.pool);
                 $('<div></div>').appendTo(el).pnlDelays()[0].dataBind(opts.pool);
                 $('<div></div>').appendTo(el).pnlSensorCalibration({ freezeThreshold: opts.pool.options.freezeThreshold, sensorUnits: opts.pool.options.units, sensors: opts.sensors, tempUnits: opts.tempUnits, systemUnits: opts.systemUnits })[0].dataBind(opts.pool);
-                $('<div></div>').appendTo(el).pnlAlerts({})[0].dataBind(opts.alerts);
-                $('<div></div>').appendTo(el).pnlSecurity({})[0].dataBind(opts.security);
-                $('<div></div>').appendTo(el).pnlVacation({})[0].dataBind(opts.pool.options.vacation || {});
+                if (isIntelliCenter) {
+                    $('<div></div>').appendTo(el).pnlAlerts({})[0].dataBind(opts.alerts);
+                    $('<div></div>').appendTo(el).pnlSecurity({})[0].dataBind(opts.security);
+                }
+                else {
+                    $('<div></div>').appendTo(el).pnlSecurity({})[0].dataBind({});
+                }
+                $('<div></div>').appendTo(el).pnlVacation({})[0].dataBind((opts.pool && opts.pool.options) ? opts.pool.options.vacation || {} : {});
             });
         }
     });
@@ -354,6 +360,11 @@
         },
         _buildControls: function () {
             var self = this, o = self.options, el = self.element;
+            var isIntelliCenter = (($('body').attr('data-controllertype') || '').toLowerCase() === 'intellicenter');
+            if (!isIntelliCenter) {
+                el.hide();
+                return;
+            }
             el.empty();
             el.addClass('picConfigCategory cfgAlerts');
             var outerAcc = $('<div></div>').appendTo(el).accordian({ columns: [{ text: 'Alerts & Notifications', glyph: 'far fa-bell', style: { width: '15rem' } }] });
@@ -365,6 +376,17 @@
         },
         dataBind: function (obj) {
             var self = this, o = self.options, el = self.element;
+            var isIntelliCenter = (($('body').attr('data-controllertype') || '').toLowerCase() === 'intellicenter');
+            if (!isIntelliCenter) {
+                el.hide();
+                return;
+            }
+            if (obj && obj.definitions) {
+                self._alerts = obj.alerts || {};
+                self._definitions = obj.definitions || {};
+                self._renderCategories();
+                return;
+            }
             $.getApiService('/config/options/alerts', null, function (data, status, xhr) {
                 self._alerts = data.alerts || {};
                 self._definitions = data.definitions || {};
@@ -526,6 +548,11 @@
         },
         dataBind: function (obj) {
             var self = this, o = self.options, el = self.element;
+            var isIntelliCenter = (($('body').attr('data-controllertype') || '').toLowerCase() === 'intellicenter');
+            if (!isIntelliCenter) {
+                self._bindData(obj || {});
+                return;
+            }
             if (!obj || typeof obj.enabled === 'undefined') {
                 $.getApiService('/config/options/security', null, function (data) {
                     if (data && data.security) self._bindData(data.security);
